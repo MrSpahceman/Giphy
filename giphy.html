@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Giphy</title>
+</head>
+<body>
+<h1>Giphy List</h1>
+    
+    <!-- <button id="add">Movies!</button> -->
+    <button data-search="Snoop Dogg">Snoop</button>
+    <button data-search="Reaction">Reaction</button>
+    <button data-search="surfing">Surfing</button>
+    <div id="tasks"></div>
+    <!-- "https://code.jquery.com/jquery-3.2.1.js" -->
+    <!-- "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" -->
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+
+<!-- <button data-person="Arnold Schwarzenegger">I'll be back</button> -->
+
+
+   <script type="text/javascript">
+   var topics = ["movies", "cars", "surfing"];
+      var queryURL = "http:api.giphy.com/v1/gifs/search?q=surfing&api_key=104a08b7f9c342a1832feb2f52793720";
+      // console.log(queryURL);
+
+     // 104a08b7f9c342a1832feb2f52793720
+
+      // ///When the user clicks my buttons run addTask
+  $('button').on("click",function(){
+          var topicsButton = $(this).data("search");
+                console.log(topicsButton)
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q="+topicsButton+" &api_key=104a08b7f9c342a1832feb2f52793720&limit=3"; 
+            console.log(queryURL);
+
+              $.ajax({url:queryURL,method:"GET"})
+            .done(function(response){
+                console.log(response);
+                      for(var i=0; i<response.data.length; i++){
+                        $('body').append("<p>Rating:" +response.data[i].rating+"</p>");
+                        $('body').append("<img src='" + response.data[i].images.downsized_medium.url+"'>")
+                   }
+                })
+              })
+      
+
+      
+      </script>
+
+</body>
+</html>
