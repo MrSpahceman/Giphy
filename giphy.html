@@ -1,50 +1,99 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>My Giphy</title>
+    <title>My Giphy</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <!-- adding jquery code -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 </head>
+
 <body>
-<h1>Giphy List</h1>
-    
-    <!-- <button id="add">Movies!</button> -->
-    <button data-search="Snoop Dogg">Snoop</button>
-    <button data-search="Reaction">Reaction</button>
-    <button data-search="surfing">Surfing</button>
-    <div id="tasks"></div>
-    <!-- "https://code.jquery.com/jquery-3.2.1.js" -->
-    <!-- "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" -->
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <h1>Giphy List</h1>
+    <div class="alert alert-danger">Hope this works</div>
+    <div id="control">
+        <form>
+            <label for="giphy-Input">Add a Giphy</label>
+            <input type="text" id="giphy-Input">
+            <br>
+            <!-- button triggers newGiphy to be added -->
+            <input id="add-newGiphy" type="submit" value="add a Giphy">
+        </form>
+        <!-- adding buttons -->
+        <div id="search-buttons">
+            <button data-search="Snoop Dogg">Snoop</button>
+            <button data-search="Reaction">Reaction</button>
+            <button data-search="surfing">Surfing</button>
+        </div>
+    </div>
+    <div class="container " id="gifs-appear-here">
+        <!-- Adding user search button -->
+        <!-- adding java script -->
+        <script type="text/javascript">
+        // adding topics array
+        var topics = ["snoop", "Reaction", "surfing"];
 
-<!-- <button data-person="Arnold Schwarzenegger">I'll be back</button> -->
-
-
-   <script type="text/javascript">
-   var topics = ["movies", "cars", "surfing"];
-      var queryURL = "http:api.giphy.com/v1/gifs/search?q=surfing&api_key=104a08b7f9c342a1832feb2f52793720";
-      // console.log(queryURL);
-
-     // 104a08b7f9c342a1832feb2f52793720
-
-      // ///When the user clicks my buttons run addTask
-  $('button').on("click",function(){
-          var topicsButton = $(this).data("search");
-                console.log(topicsButton)
-                var queryURL = "http://api.giphy.com/v1/gifs/search?q="+topicsButton+" &api_key=104a08b7f9c342a1832feb2f52793720&limit=3"; 
+        //When the user clicks my buttons run topicsButton 
+        $('button').on("click", function() {
+            var topicsButton = $(this).data("search");
+            console.log(topicsButton)
+            //constructing query URL using the topicsButton name          
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topicsButton + "&api_key=104a08b7f9c342a1832feb2f52793720&limit=10";
             console.log(queryURL);
-
-              $.ajax({url:queryURL,method:"GET"})
-            .done(function(response){
-                console.log(response);
-                      for(var i=0; i<response.data.length; i++){
-                        $('body').append("<p>Rating:" +response.data[i].rating+"</p>");
-                        $('body').append("<img src='" + response.data[i].images.downsized_medium.url+"'>")
-                   }
+            //adding ajax request with the queryURL
+            $.ajax({
+                    url: queryURL,
+                    method: "GET"
                 })
-              })
-      
+                //after data comesback from request
+                .done(function(response) {
+                    console.log(response);
+                    //adding for loop to append the buttons from above to include rating below Gif
+                    for (var i = 0; i < response.data.length; i++) {
+                        //Attempting to append to the front. Not working
+                        $("<div>").addClass("col-xs-12 col-sm-6 col-md-4")
+                            .append("<p>Rating:" + response.data[i].rating + "</p>")
+                            .append("<img style='width: 100%;' src='" + response.data[i].images.downsized_medium.url + "'>")
+                            .prependTo("#gifs-appear-here");
+                    }
+                });
+        });
+        //function for displaying new giphy data
+        function renderButtons() {
 
-      
-      </script>
+            //deleting the giphy buttons prior to ading new  buttons to stop from repeating buttons
+            $("#giphy-Input").empty();
+            for (var i = 0; i < topicsButton.length; i++) {
+                var a = $("<button>").addclass("")
+                    .text(topicsButton[i]);
+                $("#giphy-Input").append(a);
+            }
 
+        }
+
+        //going to make it stop then start again
+        $(".data-search").on("click", function() {
+
+            var state = $(this).attr("data-state");
+
+
+        });
+
+        //function handles events where one button is clicked
+        $("#add-newGiphy").on("click", function(event) {
+            console.log("User is trying to add new Giphy Search");
+            //prevents form from submitting itesel
+            event.preventDefault();
+
+            //grabbing text from the inputbox
+            var giphy = $("#giphy-Input").val();
+            console.log(giphy);
+            //adding giphy from text box
+            topics.push(giphy);
+            console.log('topics', topics);
+        });
+        </script>
 </body>
+
 </html>
